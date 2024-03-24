@@ -1,27 +1,41 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System;
+
 public class SayaTubeVideo
 {
     private int id;
     private string title;
     private int playCount;
 
-    public SayaTubeVideo(String judul)
+    public SayaTubeVideo(string judul)
     {
+        if (judul == null || judul.Length > 100)
+        {
+            throw new ArgumentException("Judul video harus memiliki panjang maksimal 100 karakter dan tidak boleh kosong.");
+        }
+
         this.id = new Random().Next(10000, 99999);
         this.title = judul;
         this.playCount = 0;
     }
 
-    public void IncereasePlayCount(int playCount)
+    public void IncreasePlayCount(int count)
     {
-        this.playCount += playCount;
+        if (count < 0 || count > 10000000)
+        {
+            throw new ArgumentOutOfRangeException("Jumlah penambahan play count harus di antara 0 dan 10.000.000.");
+        }
+
+        checked
+        {
+            this.playCount += count;
+        }
     }
 
     public void PrintVideoDetails()
     {
-        Console.WriteLine(this.id);
-        Console.WriteLine(this.title);
-        Console.WriteLine(this.playCount);
+        Console.WriteLine("ID: " + this.id);
+        Console.WriteLine("Title: " + this.title);
+        Console.WriteLine("Play Count: " + this.playCount);
     }
 }
 
@@ -29,8 +43,20 @@ class Program
 {
     static void Main(string[] args)
     {
-        SayaTubeVideo video = new SayaTubeVideo("Tutorial Design By Contract - Adrian");
-        video.IncereasePlayCount(1);
-        video.PrintVideoDetails();
+        try
+        {
+            SayaTubeVideo video = new SayaTubeVideo("Tutorial Design By Contract - Adrian");
+
+            for (int i = 0; i < 100000000; i++)
+            {
+                video.IncreasePlayCount(100000);
+            }
+
+            video.PrintVideoDetails();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception caught: " + ex.Message);
+        }
     }
 }
