@@ -25,9 +25,16 @@ public class SayaTubeVideo
             throw new ArgumentOutOfRangeException("Jumlah penambahan play count harus di antara 0 dan 10.000.000.");
         }
 
-        checked
+        try
         {
-            this.playCount += count;
+            checked
+            {
+                this.playCount += count;
+            }
+        }
+        catch (OverflowException ex)
+        {
+            throw new OverflowException("Terjadi overflow pada penambahan play count.", ex);
         }
     }
 
